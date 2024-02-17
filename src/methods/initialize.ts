@@ -1,4 +1,4 @@
-import { RequestMessage } from "../server.ts";
+import { RequestMessage } from "../server";
 
 type ServerCapabilities = Record<string, unknown>;
 
@@ -11,8 +11,11 @@ interface InitializeResult {
 }
 
 export function initialize(message: RequestMessage): InitializeResult {
+    console.log(message);
     return {
-        capabilities: {},
+        capabilities: {
+            completionProvider: {},
+        },
         serverInfo: {
             name: "css-variables-language-server",
             version: "1.0.0",
