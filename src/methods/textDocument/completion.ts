@@ -9,10 +9,10 @@ export interface CompletionList {
     items: CompletionItem[];
 }
 
-export function completion(message: RequestMessage) {
+export function completion(message: RequestMessage): CompletionList {
     console.log(message);
     return {
-        isComplete: false,
+        isIncomplete: false,
         items: [{ label: "TypeScript" }, { label: "LSP" }, { label: "lua" }],
     };
 }
