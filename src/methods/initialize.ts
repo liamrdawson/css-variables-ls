@@ -10,15 +10,49 @@ interface InitializeResult {
     };
 }
 
-export function initialize(message: RequestMessage): InitializeResult {
-    console.log(message);
-    return {
+interface InitializeRequestParams {
+    capabilities: {
+        workspace?: {
+            configuration?: boolean;
+            workspaceFolders?: boolean;
+        };
+    };
+}
+
+export interface InitializeRequestMessage extends RequestMessage {
+    params?: InitializeRequestParams;
+}
+
+export function initialize(
+    message: InitializeRequestMessage,
+): InitializeResult {
+    const hasWorkspaceFolderCapability = !!(
+        message.params &&
+        message.params.capabilities &&
+        message.params.capabilities.workspace &&
+        message.params.capabilities.workspace.workspaceFolders
+    );
+
+    const result: InitializeResult = {
         capabilities: {
-            completionProvider: {},
-        },
-        serverInfo: {
-            name: "css-variables-language-server",
-            version: "1.0.0",
+            completionProvider: {
+                resolveProvider: true,
+            },
+            serverInfo: {
+                name: "css-variables-language-server",
+                version: "1.0.0",
+            },
         },
     };
+
+    if (hasWorkspaceFolderCapability) {
+        result.capabilities.workspace = {
+            workspaceFolders: {
+                supported: true,
+                changeNotifications: true,
+            },
+        };
+    }
+
+    return result;
 }

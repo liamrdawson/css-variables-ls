@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { initialize } from "./methods/initialize";
+import { InitializeRequestMessage, initialize } from "./methods/initialize";
 import { completion } from "./methods/textDocument/completion";
 
 import log from "./log";
@@ -14,7 +14,9 @@ export interface RequestMessage extends Message {
     params?: unknown[] | object;
 }
 
-type RequestMethod = (message: RequestMessage) => unknown;
+type RequestMethod = (
+    message: InitializeRequestMessage,
+) => ReturnType<typeof initialize> | ReturnType<typeof completion>;
 
 const methodLookup: Record<string, RequestMethod> = {
     initialize,
@@ -34,7 +36,7 @@ let buffer = "";
 
 // Read stdin and accumulate our chunks into a buffer.
 // Check if we have a full message and convert it to JSON.
-// If the message has a method on it, and it's one that we know how to respond to it
+// If the message has a method on it, and it's one that we know how to
 // then invoke it. Send out the response over stdout.
 // Remove the message from the buffer.
 process.stdin.on("data", chunk => {
