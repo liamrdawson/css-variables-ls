@@ -10,6 +10,11 @@ interface InitializeResult {
     };
 }
 
+interface WorkspaceFolder {
+    uri: string;
+    name: string;
+}
+
 interface InitializeRequestParams {
     capabilities: {
         workspace?: {
@@ -17,6 +22,7 @@ interface InitializeRequestParams {
             workspaceFolders?: boolean;
         };
     };
+    workspaceFolders: WorkspaceFolder[] | null;
 }
 
 export interface InitializeRequestMessage extends RequestMessage {
